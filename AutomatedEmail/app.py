@@ -3,7 +3,7 @@ from flask_session import Session
 from tempfile import mkdtemp
 import os
 from werkzeug.security import check_password_hash, generate_password_hash
-import PyPDF2
+from PyPDF2 import PdfReader
 # import openai
 
 # Configure application
@@ -36,11 +36,11 @@ def home():
 def uploadResume():
     if request.method == 'POST':
         file = request.files['resume']
-        # Do something with the file, for example save it
-        pdf_reader = PyPDF2.PdfFileReader(file)
-        page = pdf_reader.getPage(0)
-        text_resume = page.extractText()
-        return 'File uploaded successfully'
+        pdf_reader = PdfReader(file)
+        text_resume = ''
+        for page in pdf_reader.pages:
+            text_resume += page.extract_text()
+        return render_template('home.html', content = text_resume, prof = '')
     else:
         return render_template('home.html')
 
@@ -48,9 +48,10 @@ def uploadResume():
 def uploadProfessorWork():
     if request.method == 'POST':
         file = request.files['professorWork']
-        pdf_reader = PyPDF2.PdfFileReader(file)
-        page = pdf_reader.getPage(0)
-        text_professor = page.extractText()
-        return 'File uploaded successfully'
+        pdf_reader = PdfReader(file)
+        prof_work = ''
+        for page in pdf_reader.pages:
+            prof_work+= page.extract_text()
+        return render_template('home.html', prof = prof_work, content = '')
     else:
         return render_template('home.html')

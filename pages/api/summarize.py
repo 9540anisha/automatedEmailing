@@ -3,6 +3,7 @@ import os
 import re
 import splitText
 from dotenv import load_dotenv
+from encodingFilter import count_special_chars
 
 load_dotenv()
 
@@ -33,13 +34,11 @@ def showPaperSummary(chunks):
         )
         if(i == 0):
             output += "Paper Summary: \n" + response["choices"][0]["text"] + "\nKey Points: \n"
-            # print("Paper Summary: \n")
-            # print(response["choices"][0]["text"])
-            # print("Key Points:")
         else:
             tempString = f"#{i - skips}:" + response["choices"][0]["text"] + "\n \n"
-            if(tempString.count("et al.") > 2):
+            if(tempString.count("et al.") > 1 or len(re.findall(r'\d{3,}', tempString)) > 3 or count_special_chars(tempString) / len(tempString) > 0.25): #if there are more than 3 occurences of 3 consecutive digits, if there is more than 1 occurence of "et.al", or if more than 25% of the string is composed of special characters, skip
                 skips += 1
+                print("skipped")
                 continue
             output += tempString
     return output

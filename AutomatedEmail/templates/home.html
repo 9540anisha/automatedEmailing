@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+
+{% block title %}
+    Upload
+{% endblock %}
+
+{% block main %}
+    <div class="container">
+        <table class="table table-bordered">
+          <thead>
+            <tr>
+              <th>Upload resume</th>
+              <th>Upload professor work</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>
+                <form action="/uploadResume" method="post" enctype="multipart/form-data">
+                  <label class="form-label" for="resume">Choose file:</label>
+                  <input type="file" class="form-control" id="resume" name="resume" accept=".pdf">
+                  <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                </form>
+              </td>
+              <td>
+                <form action="/uploadProfessorWork" method="post" enctype="multipart/form-data">
+                  <label class="form-label" for="professorWork">Choose file:</label>
+                  <input type="file" class="form-control" id="professorWork" name="professorWork" accept=".pdf">
+                  <button type="submit" class="btn btn-primary mt-2">Upload</button>
+                </form>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+        <body>
+          <head>Resume Text </head>
+          <p>{{ content }}</p>
+          <p>{{ keywords_resume }}</p>
+          <head>Professor Work</head>    
+          <p>{{ keywords_prof }}</p>
+          {% if keyword_definitions %}
+            <h2>Keyword Definitions:</h2>
+            <ul>
+                {% for keyword, definition in keyword_definitions.items() %}
+                    <li><strong>{{ keyword }}</strong>: {{ definition }}</li>
+                {% endfor %}
+            </ul>
+          {% endif %}
+        </body>
+      </div>
+{% endblock %}
